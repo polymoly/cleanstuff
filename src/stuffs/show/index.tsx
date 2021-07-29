@@ -1,14 +1,17 @@
-import { Suspense, SuspenseProps } from "react";
+import { useCallback } from "react";
 
-interface ShowProps<S> extends Omit<Partial<SuspenseProps>, "children"> {
+type Fn<U> = U | (() => U);
+interface ShowProps<S, U> {
   when: S | undefined | false | null;
-  children: JSX.Element | ((item: S) => JSX.Element);
+  children: Fn<U>;
+  fallback?: Fn<U>;
 }
 
-export function Show<S>({ when, fallback, children }: ShowProps<S>) {
-  return (
-    <Suspense fallback={fallback ?? false}>
-      {when && (children instanceof Function ? children(when) : children)}
-    </Suspense>
+export function Show<S, U>({ when, fallback, children }: ShowProps<S, U>) {
+  const make = useCallback(
+    (arg: Fn<U> | undefined) => (arg instanceof Function ? arg() : arg),
+    []
   );
+
+  return <>{when ? make(children) : make(fallback)}</>;
 }

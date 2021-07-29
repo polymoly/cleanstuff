@@ -1,9 +1,11 @@
-import { Suspense, cloneElement, SuspenseProps } from "react";
+import { useCallback, cloneElement } from "react";
 import { uniqueId } from "../uniqueIdGenerator";
 
-interface ForProps<S, U> extends Omit<Partial<SuspenseProps>, "children"> {
+type Fn<U> = U | (() => U);
+interface ForProps<S, U> {
   each: readonly S[];
   children: (item: S, index: number) => U;
+  fallback?: Fn<U>;
 }
 
 export function For<S, U extends JSX.Element>({
@@ -11,11 +13,18 @@ export function For<S, U extends JSX.Element>({
   fallback,
   children,
 }: ForProps<S, U>) {
+  const make = useCallback(
+    (arg: Fn<U> | undefined) => (arg instanceof Function ? arg() : arg),
+    []
+  );
+
   return (
-    <Suspense fallback={fallback ?? false}>
-      {each?.map((item: S, index: number) =>
-        cloneElement(children(item, index), { key: uniqueId() })
-      )}
-    </Suspense>
+    <>
+      {each && each.length > 0
+        ? each.map((item: S, index: number) =>
+            cloneElement(children(item, index), { key: uniqueId() })
+          )
+        : make(fallback)}
+    </>
   );
 }
