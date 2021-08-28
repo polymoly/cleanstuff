@@ -1,48 +1,58 @@
 import { useState, useEffect } from "react";
 import { useDebounce } from "../hooks/useDebounce";
-import { CssEditor } from "./css";
 import { HtmlEditor } from "./html";
 import { IFrame } from "./iFrame";
-import { JsEditor } from "./js";
 import useStyles from "./style";
 
+const htmlInitialCode = `<div></div>
+
+<style>
+  div {
+    width:300px;
+    height:300px;
+    background-color:brown;
+  }
+</style>
+`;
+
 export const Playground = () => {
-  const classes = useStyles();
-  const [htmlCode, setHtmlCode] = useState<string>("");
-  const [cssCode, setCssCode] = useState<string>("");
-  const [jsCode, setJsCode] = useState<string>("");
+  const [isEditorCollapse, setIsEditorCollapse] = useState<boolean>(false);
+  const [htmlCode, setHtmlCode] = useState<string>(htmlInitialCode);
   const [src, setSrc] = useState<string>("");
+  const classes = useStyles(isEditorCollapse as any);
   const debounceHtmlCode = useDebounce(htmlCode, 300);
-  const debounceCssCode = useDebounce(cssCode, 300);
-  const debouncejsCode = useDebounce(jsCode, 300);
 
   useEffect(() => {
     const srcDoc = `<!DOCTYPE html>
                     <html lang="en">
-                        <head>
-                            <style>
-                            ${debounceCssCode}
-                            </style>
-                        </head>
-                        <body>
-                        ${debounceHtmlCode}
-                        <script type="text/javascript">
-                        ${debouncejsCode}
-                        </script>
-                        </body>
+                    <head>
+                      <style>
+                        body {
+                         overflow:hidden;
+                        }
+                      </style>
+                    </head>
+                    <body>
+                    ${debounceHtmlCode}        
+                    </body>
                         
                     </html>`;
 
     setSrc(srcDoc);
-  }, [debounceHtmlCode, debounceCssCode, debouncejsCode]);
+  }, [debounceHtmlCode]);
 
   return (
-    <div className={classes.container}>
-      <HtmlEditor code={htmlCode} onChange={(value) => setHtmlCode(value)} />
-      <CssEditor code={cssCode} onChange={(value) => setCssCode(value)} />
-      <JsEditor code={jsCode} onChange={(value) => setJsCode(value)} />
-
-      <IFrame title="editor" srcDoc={src} />
+    <div className={classes.parentWrapper}>
+      <div className={classes.header}>h</div>
+      <div className={classes.container}>
+        <div className={classes.htmlWrapper}>
+          <HtmlEditor
+            code={htmlCode}
+            onChange={(value) => setHtmlCode(value || "")}
+          />
+        </div>
+        <IFrame title="editor" srcDoc={src} />
+      </div>
     </div>
   );
 };

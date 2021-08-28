@@ -6,6 +6,7 @@ export default jss
       body: {
         margin: 0,
         padding: 0,
+        overflowY: "hidden",
         fontSize: 14,
         "& .ace_scrollbar-v": {
           "&::-webkit-scrollbar": {

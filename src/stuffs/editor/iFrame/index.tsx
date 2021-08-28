@@ -28,8 +28,8 @@ export const IFrame = ({ children, title, ...rest }: IFrameProps) => {
       frameBorder={0}
       onLoad={onLoadIframe}
       className={classes.iframe}
-      width="600px"
-      height="500px"
+      width="50%"
+      height="100%"
       {...rest}
     >
       {node && createPortal(children, node)}

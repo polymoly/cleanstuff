@@ -1,8 +1,5 @@
-import { Playground } from "./stuffs/editor";
-import "./style";
-
 function App() {
-  return <Playground />;
+  return <div>app</div>;
 }
 
 export default App;
