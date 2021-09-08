@@ -51,18 +51,25 @@ export const useStyles = createUseStyles({
     marginBottom: ({ space }: any) => (space ? space : 16),
   },
   avatar: {
-    width: ({ height }: any) => (height ? height : 30),
-    height: ({ height }: any) => (height ? height : 30),
-    borderRadius: ({ avatar }: any) => (avatar === "circle" ? "50%" : 4),
-    background: "#f7f7f7",
+    width: ({ height }: any) => (height ? height : 35),
+    height: ({ height }: any) => (height ? height : 35),
+    borderRadius: ({ avatar }: any) =>
+      avatar === "circle" || avatar === "doughnut" ? "50%" : 4,
+    background: ({ avatar }: any) =>
+      avatar === "doughnut" ? "transparent" : "#f7f7f7",
     position: "relative",
     overflow: "hidden",
+    border: ({ avatar }: any) =>
+      avatar === "doughnut" ? "5px solid #f7f7f7" : "none",
     "&::before": {
       content: '""',
       position: "absolute",
       height: "100%",
       width: "100%",
-      backgroundImage: gradient,
+      backgroundImage: ({ avatar }: any) =>
+        avatar !== "doughnut" ? gradient : undefined,
+      WebkitBorderImage: ({ avatar }: any) =>
+        avatar === "doughnut" ? gradient : undefined,
       backgroundRepeat: "no-repeat",
       animationName: "skeletonRTL",
       animationTimingFunction: "ease-in-out",

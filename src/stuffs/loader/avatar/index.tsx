@@ -6,7 +6,7 @@ interface AvatarLoaderProps {
   width?: number;
   height?: number;
   space?: number;
-  avatar?: "circle" | "square";
+  avatar?: "circle" | "square" | "doughnut";
   inline?: boolean;
 }
 
