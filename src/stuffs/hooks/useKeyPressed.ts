@@ -12,7 +12,7 @@ export const useKeyPressed = (key: string, callback: () => void) => {
   );
 
   useEffect(() => {
-    if (!window || !window.addEventListener) return;
+    if (typeof window === "undefined") return;
 
     window.addEventListener("keydown", keyHandler);
 
