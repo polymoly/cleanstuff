@@ -3,8 +3,8 @@ import { useCallback, useEffect } from "react";
 export const useKeyPressed = (key: string, callback: () => void) => {
   const keyHandler = useCallback(
     (e: KeyboardEvent) => {
-      e.preventDefault();
       if (e.key === key.toLowerCase() || e.code === key) {
+        e.preventDefault();
         callback();
       }
     },
