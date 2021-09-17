@@ -7,8 +7,10 @@ export default jss
         margin: 0,
         padding: 0,
         direction: "rtl",
-        overflowY: "hidden",
+        overflow: "hidden",
         fontSize: 14,
+        backgroundColor: "#222222",
+        height: "100vh",
         "& .ace_scrollbar-v": {
           "&::-webkit-scrollbar": {
             width: 6,
