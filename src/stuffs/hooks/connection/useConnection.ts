@@ -4,8 +4,6 @@ export const useConnection = (): boolean => {
   const [isOnline, setIsOnline] = useState<boolean>(true);
 
   useEffect(() => {
-    if (typeof window === "undefined" || !window.addEventListener) return;
-
     const load = () => setIsOnline(navigator.onLine);
 
     window.addEventListener("load", load);

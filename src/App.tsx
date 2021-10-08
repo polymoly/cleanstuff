@@ -1,7 +1,5 @@
-import { DarkModeSwitch } from "./stuffs/toggle";
-
 function App() {
-  return <DarkModeSwitch />;
+  return <div>app</div>;
 }
 
 export default App;
