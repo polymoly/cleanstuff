@@ -1,5 +1,11 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion, AnimatePresence, useCycle, MotionValue } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useCycle,
+  MotionValue,
+  usePresence,
+} from "framer-motion";
 import { AnimatedCounterProps, defaultStyle } from "./types";
 import { variants } from "./variants";
 import useStyles from "./style";
@@ -11,6 +17,7 @@ export const AnimatedCounter = ({
   direction = "downwards",
 }: AnimatedCounterProps) => {
   const [counter, onChangeCounter] = useCycle(count);
+  const [isPresent, remove] = usePresence();
   const [counterSize, setCounterSize] = useState<number>(0);
   const classes = useStyles({ style, counterSize, duration, theme: {} });
   const motionRef = useRef<HTMLSpanElement>(null);
@@ -26,8 +33,13 @@ export const AnimatedCounter = ({
     });
     resizeObserver.observe(node, { box: "border-box" });
 
-    return () => resizeObserver.unobserve(node);
-  }, [counter, count]);
+    return () => {
+      resizeObserver.unobserve(node);
+      if (!isPresent) {
+        resizeObserver.disconnect();
+      }
+    };
+  }, [counter, count, isPresent]);
 
   useEffect(() => {
     onChangeCounter();
@@ -41,7 +53,7 @@ export const AnimatedCounter = ({
 
   return (
     <div className={classes.counterContainer}>
-      <AnimatePresence initial={false}>
+      <AnimatePresence initial={false} onExitComplete={() => remove?.()}>
         <motion.span
           ref={motionRef}
           key={counter}
