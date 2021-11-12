@@ -14,4 +14,10 @@ export default createUseStyles({
     color: ({ disabled }: any) => (disabled ? "#666" : "#111"),
     cursor: ({ disabled }: any) => (disabled ? "not-allowed" : "pointer"),
   },
+  hovering: {
+    "&:hover": {
+      color: "#1890ff",
+      border: [1, "solid", "#1890ff"],
+    },
+  },
 });
