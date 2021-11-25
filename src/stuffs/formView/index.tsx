@@ -1,31 +1,35 @@
-import { createContext, RefObject, useState, Children } from "react";
-import { FormItem } from "./formItem";
+import { createContext, RefObject, useState } from "react";
+import { FormProvider, FormProviderProps } from "react-hook-form";
+
+type RecordRefs = Record<number, RefObject<HTMLInputElement>>;
 
 type FormContextType = {
-  refs: RefObject<HTMLInputElement>[];
-  onAddRef: (ref: RefObject<HTMLInputElement>) => void;
+  refs: RecordRefs;
+  storeRef: (ref: RefObject<HTMLInputElement>, index: number) => void;
   submit: (e?: React.FormEvent<HTMLFormElement>) => void;
 };
 
 const initialContext: FormContextType = {
   refs: [],
-  onAddRef: () => {},
+  storeRef: () => {},
   submit: () => {},
 };
 
 export const RefsContext = createContext<FormContextType>(initialContext);
 
-type FormProps = JSX.IntrinsicElements["form"];
-interface FormViewProps extends FormProps {
-  children: JSX.Element | JSX.Element[];
+interface FormControlledProviderProps extends FormProviderProps {
   onSubmit?: (e?: React.FormEvent<HTMLFormElement>) => void;
 }
 
-export const FormView = ({ children, onSubmit, ...rest }: FormViewProps) => {
-  const [refs, setRefs] = useState<RefObject<HTMLInputElement>[]>([]);
+export const FormControlledProvider = ({
+  onSubmit,
+  children,
+  ...methods
+}: FormControlledProviderProps) => {
+  const [refs, setRefs] = useState<RecordRefs>({});
 
-  const onAddRef = (ref: RefObject<HTMLInputElement>) => {
-    setRefs((prev) => [...prev, ref]);
+  const storeRef = (ref: RefObject<HTMLInputElement>, index: number) => {
+    setRefs((prev) => ({ ...prev, [index]: ref }));
   };
 
   const submit = (e?: React.FormEvent<HTMLFormElement>) => {
@@ -36,12 +40,12 @@ export const FormView = ({ children, onSubmit, ...rest }: FormViewProps) => {
   };
 
   return (
-    <RefsContext.Provider value={{ onAddRef, refs, submit }}>
-      <form style={{ display: "flex", flex: 1 }} onSubmit={submit} {...rest}>
-        {Children.map(children, (child, index) => (
-          <FormItem index={index}>{child}</FormItem>
-        ))}
-      </form>
-    </RefsContext.Provider>
+    <FormProvider {...methods}>
+      <RefsContext.Provider value={{ storeRef, refs, submit }}>
+        <form style={{ display: "flex", flex: 1 }} onSubmit={submit}>
+          {children}
+        </form>
+      </RefsContext.Provider>
+    </FormProvider>
   );
 };
