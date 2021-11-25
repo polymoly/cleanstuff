@@ -38,10 +38,9 @@ export const FormView = ({ children, onSubmit, ...rest }: FormViewProps) => {
   return (
     <RefsContext.Provider value={{ onAddRef, refs, submit }}>
       <form style={{ display: "flex", flex: 1 }} onSubmit={submit} {...rest}>
-        {Children.map(children, (child, index) => {
-          const isInput = child?.type === "input";
-          return isInput ? <FormItem index={index}>{child}</FormItem> : child;
-        })}
+        {Children.map(children, (child, index) => (
+          <FormItem index={index}>{child}</FormItem>
+        ))}
       </form>
     </RefsContext.Provider>
   );

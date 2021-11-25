@@ -25,12 +25,21 @@ export const FormItem = ({ children, index }: FormItemProps) => {
       children.props.onKeyDown?.(e);
       if (e.key === "Enter") {
         e.preventDefault();
-        if (refs.length - 1 === index) {
-          refs[index].current?.blur();
-          submit?.();
+        const _refs = [...refs].slice(index + 1);
+
+        const focusingRef = _refs.find(
+          (ref) => ref.current?.tagName.toLowerCase() === "input"
+        );
+
+        if (focusingRef) {
+          focusingRef.current?.focus();
           return;
         }
-        refs[index + 1]?.current?.focus();
+        const lastRefs = refs.filter(
+          (ref) => ref.current?.tagName.toLowerCase() === "input"
+        );
+        lastRefs[lastRefs.length - 1].current?.blur();
+        submit?.();
       }
     },
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => {
