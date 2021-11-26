@@ -1,60 +1,38 @@
-import { useForm } from "react-hook-form";
-import { FormControlledProvider } from "./stuffs/formView";
-import { Control } from "./stuffs/formView/control";
+import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
+import { InputOnlyNumber } from "./stuffs/inputOnlyNumber";
 
 function App() {
+  const { text } = useWatch({}) as { text: string };
+
+  console.log(text);
   return (
     <div>
-      <Control name="a" selfIndex="1" targetIndex="2">
-        <input type="text" />
-      </Control>
-      <div>gholi</div>
-      <div>
-        <Control name="b" selfIndex="2" targetIndex="3">
-          <input type="text" />
-        </Control>
-      </div>
-      <Control name="c" selfIndex="3" targetIndex="4">
-        <input type="text" />
-      </Control>
-      <div>asghar</div>
-      <Control name="d" selfIndex="4" targetIndex="1">
-        <input type="text" />
-      </Control>
+      <Controller
+        name="text"
+        render={({ field: { onChange, value } }) => (
+          <InputOnlyNumber
+            value={value}
+            onChange={onChange}
+            onlyNumber
+            pattern={/^[0-9]*$/}
+          />
+        )}
+      />
     </div>
   );
 }
 
 const Provider = () => {
-  const methods = useForm<Props>({ mode: "onChange", defaultValues: state });
+  const methods = useForm<{ text: string }>({
+    mode: "onChange",
+    defaultValues: { text: "" },
+  });
 
   return (
-    <FormControlledProvider {...methods}>
+    <FormProvider {...methods}>
       <App />
-    </FormControlledProvider>
+    </FormProvider>
   );
 };
 
 export default Provider;
-
-interface Props {
-  a?: string;
-  b?: string;
-  c?: string;
-  d?: string;
-}
-const state: Props = {
-  a: "",
-  b: "",
-  c: "",
-  d: "",
-};
-
-const qq = [
-  {
-    name: "a",
-  },
-  {
-    name: "b",
-  },
-];
