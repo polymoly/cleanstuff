@@ -1,26 +1,24 @@
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FormControlledProvider } from "./stuffs/formView";
 import { Control } from "./stuffs/formView/control";
 
 function App() {
-  const values = useWatch({}) as Props;
-  console.log(values);
   return (
     <div>
-      <Control name="a" index={1} nextIndex={2}>
+      <Control name="a" selfIndex="1" targetIndex="2">
         <input type="text" />
       </Control>
       <div>gholi</div>
       <div>
-        <Control name="b" index={2} nextIndex={3}>
+        <Control name="b" selfIndex="2" targetIndex="3">
           <input type="text" />
         </Control>
       </div>
-      <Control name="c" index={3} nextIndex={4}>
+      <Control name="c" selfIndex="3" targetIndex="4">
         <input type="text" />
       </Control>
       <div>asghar</div>
-      <Control name="d" index={4} nextIndex={1}>
+      <Control name="d" selfIndex="4" targetIndex="1">
         <input type="text" />
       </Control>
     </div>
@@ -51,3 +49,12 @@ const state: Props = {
   c: "",
   d: "",
 };
+
+const qq = [
+  {
+    name: "a",
+  },
+  {
+    name: "b",
+  },
+];

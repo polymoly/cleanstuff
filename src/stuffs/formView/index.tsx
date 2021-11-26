@@ -1,4 +1,4 @@
-import { createContext, RefObject, useState } from "react";
+import { Children, createContext, RefObject, useState } from "react";
 import { FormProvider, FormProviderProps } from "react-hook-form";
 
 type RecordRefs = Record<number, RefObject<HTMLInputElement>>;
@@ -17,8 +17,10 @@ const initialContext: FormContextType = {
 
 export const RefsContext = createContext<FormContextType>(initialContext);
 
-interface FormControlledProviderProps extends FormProviderProps {
+interface FormControlledProviderProps
+  extends Omit<FormProviderProps, "children"> {
   onSubmit?: (e?: React.FormEvent<HTMLFormElement>) => void;
+  children: JSX.Element | JSX.Element[];
 }
 
 export const FormControlledProvider = ({
@@ -34,9 +36,7 @@ export const FormControlledProvider = ({
 
   const submit = (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
-    if (onSubmit) {
-      onSubmit(e);
-    }
+    onSubmit && onSubmit(e);
   };
 
   return (

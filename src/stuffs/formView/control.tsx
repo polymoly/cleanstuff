@@ -4,14 +4,14 @@ import { RefsContext } from ".";
 
 interface ControlProps extends Omit<ControllerProps, "render"> {
   children: JSX.Element;
-  index: number;
-  nextIndex: number;
+  selfIndex: number | string;
+  targetIndex: number | string;
 }
 
 export const Control = ({
   children,
-  index,
-  nextIndex,
+  selfIndex,
+  targetIndex,
   ...rest
 }: ControlProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -20,7 +20,7 @@ export const Control = ({
   useEffect(() => {
     if (!inputRef.current) return;
 
-    storeRef(inputRef, index);
+    storeRef(inputRef, Number(selfIndex));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -32,19 +32,19 @@ export const Control = ({
         cloneElement<JSX.IntrinsicElements["input"]>(children, {
           ...children.props,
           ...field,
-          tabIndex: index,
+          tabIndex: selfIndex,
           ref: inputRef,
           onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
             children.props.onKeyDown?.(e);
             if (e.key === "Enter") {
               e.preventDefault();
-              refs?.[nextIndex]?.current?.focus();
+              refs?.[Number(targetIndex)]?.current?.focus();
 
               if (Object.keys(refs).length <= 1) {
-                refs?.[nextIndex]?.current?.blur();
+                refs?.[Number(targetIndex)]?.current?.blur();
                 submit();
               }
-              delete refs?.[nextIndex];
+              delete refs?.[Number(targetIndex)];
             }
           },
         })
