@@ -1,14 +1,12 @@
 import { createElement, CSSProperties } from "react";
 import classnames from "classnames";
 import { jss } from "react-jss";
-import faker from "faker/locale/fa";
 
 type ComposeStyles<T extends ComposeProps<T>> = {
   [S in keyof CSSProperties]:
     | CSSProperties[S]
     | ((props: T) => CSSProperties[S]);
 };
-
 type TCompose = JSX.IntrinsicElements;
 type PCompose<U extends keyof TCompose, T> = JSX.IntrinsicElements[U] & T;
 
@@ -80,7 +78,7 @@ const compose = <C extends keyof TCompose, D extends ComposeProps<any>>(
   return addStyles();
 };
 
-export const Wrapper = compose("div").addStyles<Size>({
+export const Wrapper = compose("div").addStyles({
   height: ({ size }) => size,
   color: ({ color }) => color,
   fontSize: 15,
@@ -91,4 +89,6 @@ interface Size {
   color?: string;
 }
 
-export const Button = compose("button").addStyles({});
+export const Input = compose("input").addStyles({
+  color: "red",
+});

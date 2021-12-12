@@ -6,7 +6,6 @@ type Locale = "en" | "fa";
 type FakeDataTypes = {
   NUMBER: number;
   STRING: string;
-  LONG_STRING: string;
   BOOLEAN: boolean;
   ARRAY_STRING: Array<string>;
   ARRAY_NUMBER: Array<number>;
@@ -16,7 +15,6 @@ type FakeDataTypes = {
 export const DataTypes: FakeDataTypes = {
   NUMBER: Number(),
   STRING: String(),
-  LONG_STRING: Symbol().toString(),
   BOOLEAN: Boolean(),
   ARRAY_STRING: Array<string>(),
   ARRAY_NUMBER: Array<number>(),
@@ -47,9 +45,6 @@ const fake = <S extends object>(
       return [key, faker.lorem.word(8)];
     }
 
-    if (value === DataTypes.LONG_STRING) {
-      return [key, faker.lorem.paragraph(3)];
-    }
     if (value === DataTypes.BOOLEAN) {
       return [key, faker.datatype.boolean()];
     }
@@ -78,7 +73,7 @@ export const useFaker = <S extends object>(
   locale?: Locale
 ): S[] => {
   const faker = useMemo(() => {
-    return Array.from({ length: count }, () =>
+    return Array.from<any, S>({ length: count }, () =>
       Object.fromEntries(fake(model, count, locale))
     );
   }, [count, model, locale]);

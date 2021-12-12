@@ -1,38 +1,25 @@
-import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
-import { InputOnlyNumber } from "./stuffs/inputOnlyNumber";
+import { Input } from "antd";
+import { useEffect, useRef, useState } from "react";
+import { AnimatedButton } from "./stuffs/animatedButton";
+import { useNotify } from "./stuffs/notifications";
+import { SuperButton } from "./stuffs/superButton";
+import { useStyles } from "./style";
+import { Statistic } from "antd";
+import { Wrapper } from "./stuffs/styled";
+import { For } from "./stuffs/for";
+import { usePreviousProps } from "./stuffs/hooks/usePreviousProps";
+import { VariantText } from "./stuffs/variantText";
 
 function App() {
-  const { text } = useWatch({}) as { text: string };
+  const ref = useRef<HTMLElement>(null);
 
-  console.log(text);
+  console.log({ ref });
+
   return (
-    <div>
-      <Controller
-        name="text"
-        render={({ field: { onChange, value } }) => (
-          <InputOnlyNumber
-            value={value}
-            onChange={onChange}
-            onlyNumber
-            pattern={/^[0-9]*$/}
-          />
-        )}
-      />
+    <div style={{ margin: 50 }}>
+      <AnimatedButton />
     </div>
   );
 }
 
-const Provider = () => {
-  const methods = useForm<{ text: string }>({
-    mode: "onChange",
-    defaultValues: { text: "" },
-  });
-
-  return (
-    <FormProvider {...methods}>
-      <App />
-    </FormProvider>
-  );
-};
-
-export default Provider;
+export default App;

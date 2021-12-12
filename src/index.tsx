@@ -6,13 +6,16 @@ import "./style";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import { QueryClientProvider, QueryClient } from "react-query";
+import { NotifyProvider } from "./stuffs/notifications";
 
 const client = new QueryClient();
 
 ReactDOM.render(
   <Router>
     <QueryClientProvider client={client}>
-      <App />
+      <NotifyProvider>
+        <App />
+      </NotifyProvider>
     </QueryClientProvider>
   </Router>,
   document.getElementById("root")
