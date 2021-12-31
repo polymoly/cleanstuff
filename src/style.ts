@@ -1,13 +1,30 @@
 import { jss, createUseStyles } from "react-jss";
+import { generateIndex } from "reactjs-view-core";
 
-export const useStyles = createUseStyles({
-  gholi: {
-    color: "red",
+export const useStyles = createUseStyles(
+  {
+    action: {
+      padding: [6, 12],
+      backgroundColor: "#ccc",
+      borderRadius: 4,
+      width: 200,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    active: {
+      backgroundColor: "#444",
+    },
+    hover: {
+      backgroundColor: "#999",
+    },
+    focus: {
+      backgroundColor: "brown",
+    },
+    tabFocus: {
+      border: [2, "solid", "red"],
+    },
   },
-  tee: {
-    background: "green",
-  },
-  width: {
-    width: 200,
-  },
-});
+  {
+    index: generateIndex("pages"),
+  }
+);

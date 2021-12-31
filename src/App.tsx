@@ -1,14 +1,24 @@
-import { useRef, useState } from "react";
 import { View } from "reactjs-view";
-import { useObserveElement } from "./stuffs/responsive";
-import { VirtualizedList } from "./stuffs/virtualizedList";
+import { ActionView } from "./stuffs/actionView";
+import { useStyles } from "./style";
 
 function App() {
-  const observe = useObserveElement();
+  const classes = useStyles();
 
-  console.log(observe(500));
-
-  return <View style={{ maxWidth: 300 }}></View>;
+  return (
+    <View style={{ padding: 50 }}>
+      <ActionView
+        onPress={() => {}}
+        className={classes.action}
+        interactions={{
+          whenActive: classes.active,
+          whenHovered: classes.hover,
+        }}
+      >
+        سلام من به تو یار قدیمی
+      </ActionView>
+    </View>
+  );
 }
 
 export default App;
