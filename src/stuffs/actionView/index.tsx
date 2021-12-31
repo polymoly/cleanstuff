@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { View, ViewProps } from "reactjs-view";
 import { useInteractions } from "reactjs-view-core";
+import { withObserve } from "../responsive/withObserve";
 
 type Interactions = {
   whenHovered?: string;
@@ -11,7 +12,7 @@ interface ActionViewProps extends ViewProps {
   interactions?: Interactions;
 }
 
-export const ActionView = ({
+const ActionView = ({
   children,
   interactions,
   className,
@@ -35,3 +36,5 @@ export const ActionView = ({
     </View>
   );
 };
+
+export default ActionView;

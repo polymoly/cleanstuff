@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-type Size = { width: number; height: number };
+export type Size = { width: number; height: number };
 
 export const useWindowSize = (): Size => {
   const [size, setSize] = useState<Size>({
