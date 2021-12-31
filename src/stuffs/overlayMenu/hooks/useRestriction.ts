@@ -1,6 +1,6 @@
 import { RefObject, useEffect, useState } from "react";
 import { Client } from "./useMouseClient";
-import { useWindowSize } from "./useWindowSize";
+import { useWindowSize } from "../../responsive/useWindowSize";
 
 type RestrictValue = { h: number; v: number };
 
