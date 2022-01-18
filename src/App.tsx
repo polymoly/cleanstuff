@@ -1,49 +1,46 @@
 import { useState } from "react";
-import { Text, View } from "reactjs-view";
-import { DataTypes, useFaker } from "./stuffs/faker";
-import { InfiniteView } from "./stuffs/infiniteLoader";
+import { View } from "reactjs-view";
+import { InfinitePager } from "./stuffs/infinitePager";
 
-const model = {
-  name: DataTypes.STRING,
-  age: DataTypes.NUMBER,
-};
+const data = Array.from({ length: 200 }, (_, i) => {
+  return {
+    id: i,
+    title: `item-${i}`,
+  };
+});
 
 const App = () => {
-  const data = useFaker(model, 1000, "en");
   const [page, setPage] = useState<number>(0);
 
   return (
     <div style={{ padding: 50 }}>
-      <InfiniteView
+      <InfinitePager
+        total={200}
+        height={500}
+        width={350}
+        threshold={0.9}
         data={data.slice(0, page + 20)}
-        next={() => setPage((prev) => prev + 20)}
-        width={300}
-        height={400}
-        itemSize={60}
+        itemSize={44}
+        next={() => {
+          console.log("reached!");
+          setPage((p) => p + 20);
+        }}
       >
-        {({ name, age }) => (
+        {({ title }) => (
           <View
             style={{
-              width: "100%",
-              minHeight: 60,
-              background: "teal",
-              justifyContent: "space-between",
-              flexDirection: "row",
+              justifyContent: "center",
               alignItems: "center",
-              paddingInline: 12,
-              paddingBlock: 16,
-              borderBottom: "1px solid #ccc",
+              background: "#ccc",
+              color: "#222",
+              width: "100%",
+              flex: 1,
             }}
           >
-            <Text size={14} color="#fff">
-              {name}
-            </Text>
-            <Text size={14} color="#fff">
-              {age}
-            </Text>
+            {title}
           </View>
         )}
-      </InfiniteView>
+      </InfinitePager>
     </div>
   );
 };
