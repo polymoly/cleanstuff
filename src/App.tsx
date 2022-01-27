@@ -4,7 +4,7 @@ import { SplitView } from "./stuffs/splitView";
 const App = () => {
   return (
     <View style={{ padding: 50, height: "100%" }}>
-      <SplitView>
+      <SplitView shouldPersist>
         <SplitView.Pane>
           <View style={{ flex: 1, background: "red" }}>child 1</View>
         </SplitView.Pane>

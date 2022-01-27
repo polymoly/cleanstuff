@@ -8,6 +8,9 @@ export const useStyles = createUseStyles(
       alignItems: "center",
       background: "#ccc",
       overflow: "hidden",
+      boxSizing: "border-box",
+      margin: 0,
+      padding: 0,
     },
     pane: {
       width: "100%",
