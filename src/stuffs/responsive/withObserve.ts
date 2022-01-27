@@ -1,21 +1,21 @@
 import { cloneElement, useLayoutEffect, useRef, useState } from "react";
 
-type Records = {
+type TRecord = {
   readonly width?: number;
   readonly height?: number;
 };
 
 interface ObservedRecords {
-  readonly DOMRecords?: Records;
+  readonly Records?: TRecord;
 }
-type ObservedProps<T> = Omit<T, "DOMRecords">;
+type ObservedProps<T> = Omit<T, "Records">;
 type Observable<T> = ObservedProps<T> & ObservedRecords;
 
 export const withObserve = <P = {}, R extends HTMLElement = HTMLElement>(
   Component: (props: Observable<P>) => JSX.Element
 ) => {
   return (props: Observable<P>) => {
-    const [DOMRecords, setDOMRecords] = useState<Records>();
+    const [Records, setRecords] = useState<TRecord>();
 
     const ref = useRef<R>(null);
 
@@ -26,7 +26,7 @@ export const withObserve = <P = {}, R extends HTMLElement = HTMLElement>(
       const observer = new ResizeObserver(([entry]) => {
         const { width, height } = entry?.contentRect;
 
-        setDOMRecords({ width, height });
+        setRecords({ width, height });
       });
 
       observer.observe(node, { box: "border-box" });
@@ -34,6 +34,8 @@ export const withObserve = <P = {}, R extends HTMLElement = HTMLElement>(
       return () => observer.unobserve(node);
     }, [ref]);
 
-    return cloneElement(Component({ ...props, DOMRecords }), { ref });
+    return cloneElement(Component({ ...props, Records }), {
+      ref,
+    });
   };
 };
