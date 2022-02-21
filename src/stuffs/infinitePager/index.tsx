@@ -1,5 +1,4 @@
 import React, { ReactNode, useCallback, useMemo, useState } from "react";
-import { View, Text } from "reactjs-view";
 import useStyles from "./style";
 
 interface InfinitePagerProps<S> {
@@ -49,13 +48,13 @@ export const InfinitePager = <S extends object>({
   );
 
   return (
-    <View className={classes.scrollContainer} onScroll={scroll}>
+    <div className={classes.scrollContainer} onScroll={scroll}>
       {data.map((item, index) => (
-        <View key={index} className={classes.item}>
+        <div key={index} className={classes.item}>
           {children(item, index)}
-        </View>
+        </div>
       ))}
-      {hasMore && loader && <View className={classes.loader}>{loader}</View>}
-    </View>
+      {hasMore && loader && <div className={classes.loader}>{loader}</div>}
+    </div>
   );
 };

@@ -1,30 +1,23 @@
 import { createUseStyles } from "react-jss";
-import { View } from "reactjs-view";
-import { generateIndex } from "reactjs-view-core";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
-const useStyle = createUseStyles(
-  {
-    radioWrapper: {
-      width: 24,
-      height: 24,
-      borderRadius: "50%",
-      border: [2, "solid", "teal"],
-      display: "grid",
-      placeItems: "center",
-    },
-    ball: {
-      width: 16,
-      height: 16,
-      borderRadius: "50%",
-      backgroundColor: "teal",
-    },
+const useStyle = createUseStyles({
+  radioWrapper: {
+    width: 24,
+    height: 24,
+    borderRadius: "50%",
+    border: [2, "solid", "teal"],
+    display: "grid",
+    placeItems: "center",
   },
-  {
-    index: generateIndex("pages"),
-  }
-);
+  ball: {
+    width: 16,
+    height: 16,
+    borderRadius: "50%",
+    backgroundColor: "teal",
+  },
+});
 
 export const Radio = () => {
   const classes = useStyle();
@@ -32,7 +25,7 @@ export const Radio = () => {
   console.log({ checked });
 
   return (
-    <View className={classes.radioWrapper} onPress={() => setChecked(!checked)}>
+    <div className={classes.radioWrapper}>
       <AnimatePresence>
         {checked && (
           <motion.div
@@ -50,6 +43,6 @@ export const Radio = () => {
           />
         )}
       </AnimatePresence>
-    </View>
+    </div>
   );
 };

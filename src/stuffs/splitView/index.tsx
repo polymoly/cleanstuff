@@ -9,7 +9,6 @@ import React, {
   Fragment,
   useMemo,
 } from "react";
-import { View } from "reactjs-view";
 import { getSize } from "./helper";
 import { useStyles } from "./style";
 
@@ -19,13 +18,13 @@ type Pane<S> = ReactElement<S>;
 
 type PaneSize = [number?, number?];
 
-interface PaneProps {
+export interface PaneProps {
   children: ReactNode;
   portion?: number;
   minSize?: Size;
 }
 
-interface SplitViewProps {
+export interface SplitViewProps {
   children: [Pane<PaneProps>, Pane<PaneProps>];
   shouldPersist?: boolean;
 }
@@ -48,8 +47,11 @@ const SplitView = ({ children, shouldPersist }: SplitViewProps) => {
 
     const move = (event: MouseEvent) => {
       event.preventDefault();
+
       const { clientY } = event;
+
       if (!isResizerGrab || !containerRef.current) return;
+
       const node = containerRef.current;
 
       const { top, height } = node.getBoundingClientRect();
@@ -83,12 +85,12 @@ const SplitView = ({ children, shouldPersist }: SplitViewProps) => {
     };
   }, [isResizerGrab, containerRef, props, shouldPersist, paneSize]);
 
-  const onMouseDown = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+  const onMouseDown = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     setIsResizerGrab(true);
   };
 
-  const onMouseUp = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+  const onMouseUp = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     setIsResizerGrab(false);
   };
@@ -104,7 +106,7 @@ const SplitView = ({ children, shouldPersist }: SplitViewProps) => {
   }, [paneSize]);
 
   return (
-    <View
+    <div
       ref={containerRef}
       className={classes.splitContainer}
       onMouseUp={() => setIsResizerGrab(false)}
@@ -112,7 +114,7 @@ const SplitView = ({ children, shouldPersist }: SplitViewProps) => {
     >
       {props.map(({ children, minSize, portion }, index) => (
         <Fragment key={index}>
-          <View
+          <div
             className={classes.pane}
             style={{
               height: storedPaneSize?.[index],
@@ -122,9 +124,9 @@ const SplitView = ({ children, shouldPersist }: SplitViewProps) => {
             }}
           >
             {children}
-          </View>
+          </div>
           {index === 0 && (
-            <View
+            <div
               style={{ height: RESIZER_SIZE }}
               className={classNames(
                 classes.resizer,
@@ -136,7 +138,7 @@ const SplitView = ({ children, shouldPersist }: SplitViewProps) => {
           )}
         </Fragment>
       ))}
-    </View>
+    </div>
   );
 };
 

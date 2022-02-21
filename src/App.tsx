@@ -1,19 +1,21 @@
-import { View } from "reactjs-view";
-import { SplitView } from "./stuffs/splitView";
+import { Page1 } from "./page1";
+import { withObserve } from "./stuffs/responsive/withObserve";
 
-const App = () => {
+const App = withObserve(({ observationRef }) => {
   return (
-    <View style={{ padding: 50, height: "100%" }}>
-      <SplitView shouldPersist>
-        <SplitView.Pane>
-          <View style={{ flex: 1, background: "red" }}>child 1</View>
-        </SplitView.Pane>
-        <SplitView.Pane>
-          <View style={{ flex: 1, background: "blue" }}>child 2</View>
-        </SplitView.Pane>
-      </SplitView>
-    </View>
+    <div
+      ref={observationRef}
+      style={{
+        height: 600,
+        width: 600,
+        maxWidth: "100%",
+        padding: 50,
+        background: "#ccc",
+      }}
+    >
+      <Page1 />
+    </div>
   );
-};
+});
 
 export default App;
