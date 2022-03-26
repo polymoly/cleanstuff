@@ -1,23 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Page3 } from "./page3";
+import {
+  useInDynamicContext,
+  withDynamicContext,
+} from "./stuffs/motionRouting";
 import { useNotify } from "./stuffs/notify";
 
 export const Page2 = () => {
-  const navigate = useNavigate();
-  const notify = useNotify();
-  return (
-    <div>
-      <button
-        onClick={() =>
-          notify.success({
-            content: "page 2",
-            duration: 2,
-          })
-        }
-      >
-        add
-      </button>
-      <button onClick={() => navigate("/page1")}>redirect to page 1</button>
-    </div>
-  );
+  const { inDynamicContext, state } = useInDynamicContext("app");
+
+  console.log({ inDynamicContext, state });
+
+  return <div>{state.gholi === 123 ? "123" : "gholi"}</div>;
 };

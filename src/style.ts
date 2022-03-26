@@ -21,4 +21,5 @@ export const useStyles = createUseStyles({
   tabFocus: {
     border: [2, "solid", "red"],
   },
+  content: {},
 });

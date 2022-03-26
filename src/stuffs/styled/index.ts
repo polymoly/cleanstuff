@@ -92,3 +92,7 @@ interface Size {
 export const Input = compose("input").addStyles({
   color: "red",
 });
+
+const button = compose("button").addStyles({
+  padding: 20,
+});

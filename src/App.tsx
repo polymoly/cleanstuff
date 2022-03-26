@@ -1,21 +1,23 @@
-import { Page1 } from "./page1";
-import { withObserve } from "./stuffs/responsive/withObserve";
+import { useRef, useState } from "react";
+import { Modal } from "./stuffs/modal";
 
-const App = withObserve(({ observationRef }) => {
+const App = () => {
+  const [toggle, setToggle] = useState(false);
+
   return (
-    <div
-      ref={observationRef}
-      style={{
-        height: 600,
-        width: 600,
-        maxWidth: "100%",
-        padding: 50,
-        background: "#ccc",
-      }}
-    >
-      <Page1 />
+    <div>
+      <button
+        onClick={() => {
+          setToggle(!toggle);
+        }}
+      >
+        open
+      </button>
+      <Modal visible={toggle} onClose={() => setToggle(false)}>
+        gholi gholi poor
+      </Modal>
     </div>
   );
-});
+};
 
 export default App;

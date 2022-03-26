@@ -1,4 +1,5 @@
 import React, { cloneElement, createContext, useRef } from "react";
+import { useForm } from "react-hook-form";
 
 interface ObservedRecords<R> {
   readonly observationRef?: React.RefObject<R>;
@@ -16,6 +17,7 @@ export const withObserve = <
 ) => {
   return (props: Observable<P, R>) => {
     const ref = useRef<R>(null);
+    const methods = useForm();
 
     return (
       <ObserveContext.Provider value={ref}>
