@@ -21,13 +21,7 @@ interface ModalProps {
   afterClose?: () => void;
   onVisible?: () => void;
   getContainer?: HTMLElement;
-  /**
-   * @description support press esc to close
-   */
   keyboard?: boolean;
-  /**
-   * @description show fade overlay mask
-   */
   mask?: boolean;
   closable?: boolean;
   maskClosable?: boolean;
