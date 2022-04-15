@@ -31,8 +31,11 @@ interface ModalProps {
   bodyStyle?: CSSProperties;
   bodyClassName?: string;
   title?: ReactNode | null;
+  footer?: ReactNode | null;
   children?: ReactNode;
   width?: number;
+  centered?: boolean;
+  delay?: number;
   modalRender?: (node: ReactNode) => ReactNode;
 }
 
@@ -55,18 +58,35 @@ export const Modal = ({
   wrapperClassName,
   bodyClassName,
   wrapperStyle,
+  centered,
+  footer,
+  delay,
 }: ModalProps) => {
   const controls = useAnimation();
   const modalRef = useRef<HTMLDivElement>(null);
+  const maskRef = useRef<HTMLDivElement>(null);
 
   const shouldReduced = useReducedMotion();
 
   useEffect(() => {
     if (!visible) return;
+    const openVars = ["maskOpen", "open"];
 
-    controls.start(["maskOpen", "open"]).then(() => onVisible?.());
+    const open = () => controls.start(openVars).then(() => onVisible?.());
 
-    return () => controls.stop();
+    if (!delay) {
+      open();
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      open();
+    }, delay);
+
+    return () => {
+      controls.stop();
+      clearTimeout(timer);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [controls, visible]);
 
@@ -85,12 +105,14 @@ export const Modal = ({
       <AnimatePresence key="modal" onExitComplete={() => afterClose?.()}>
         {visible && (
           <motion.div
+            ref={maskRef}
             key="mask"
             variants={variants}
             initial="maskClose"
             animate={controls}
             exit="maskExit"
             custom={mask}
+            style={{ background: "red" }}
           >
             <motion.div
               ref={modalRef}
@@ -98,7 +120,7 @@ export const Modal = ({
               initial="close"
               animate={controls}
               exit="exit"
-              custom={{ width, shouldReduced }}
+              custom={{ width, shouldReduced, centered }}
               className={classNames(classes["modal-body"], wrapperClassName)}
               style={wrapperStyle}
             >
@@ -117,6 +139,7 @@ export const Modal = ({
               >
                 {modalRender ? modalRender(children) : children}
               </div>
+              {footer && footer}
             </motion.div>
           </motion.div>
         )}
