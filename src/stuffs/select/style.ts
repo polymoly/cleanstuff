@@ -11,7 +11,6 @@ export const useStyles = createUseStyles({
   container: {
     width: "100%",
     maxWidth: 500,
-    height: 40,
     borderRadius: 2,
     background: "#fff",
     outline: "none",

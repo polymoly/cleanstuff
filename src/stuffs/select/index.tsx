@@ -11,6 +11,7 @@ import { variants } from "./variants";
 import classNames from "classnames";
 import { CSSProperties } from "styled-components";
 import { Spin } from "antd";
+import { createPortal } from "react-dom";
 
 type SelectValues = {
   label?: ReactNode;
@@ -21,6 +22,7 @@ interface SelectProps<T> {
   options: T[];
   value?: T;
   maxHeight?: number;
+  height?: number;
   isLoading?: boolean;
   noContent?: ReactNode;
   placeholder?: string;
@@ -85,6 +87,7 @@ export const Select = <S extends SelectValues = SelectValues>({
   onClick,
   shouldPrevent = false,
   onSearch,
+  height = 40,
 }: SelectProps<S>) => {
   const [open, setOpen] = useState<boolean>(false);
   const [selectedValue, setSelectedValue] = useState<S | undefined>(value);
@@ -94,7 +97,7 @@ export const Select = <S extends SelectValues = SelectValues>({
   const controls = useAnimation();
   const dropRef = useRef<HTMLDivElement>(null);
 
-  const [block, setBlock] = useState<number>(0);
+  const [block, setBlock] = useState<{ left: number; bottom: number }>();
 
   useEffect(() => {
     if (!value) return;
@@ -177,7 +180,7 @@ export const Select = <S extends SelectValues = SelectValues>({
     if (loadingIndicator) {
       return loadingIndicator;
     }
-    return <Spin spinning size="small" />;
+    return <Spin spinning size='small' />;
   };
 
   const clear = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -206,8 +209,10 @@ export const Select = <S extends SelectValues = SelectValues>({
     if (!dropRef.current) return;
     const node = dropRef.current;
 
-    const observer = new IntersectionObserver(([{ boundingClientRect }]) => {
-      setBlock(boundingClientRect.top);
+    const observer = new ResizeObserver(([entry]) => {
+      const { left, bottom } = entry.target.getBoundingClientRect();
+
+      setBlock({ left, bottom });
     });
 
     observer.observe(node);
@@ -225,18 +230,17 @@ export const Select = <S extends SelectValues = SelectValues>({
     return arrowIcon;
   };
 
-  const shouldReverse = window.outerHeight - block < 300;
+  const shouldReverse = window.outerHeight - (block?.bottom || 0) < 300;
 
   return (
     <div
       ref={dropRef}
       className={classNames(classes.wrapper, wrapperClassName)}
-      style={wrapperStyle}
-    >
+      style={wrapperStyle}>
       {label && <div>{label}</div>}
       <div
         className={classNames(classes.container, bordered && classes.bordered)}
-      >
+        style={{ height }}>
         <div
           className={classNames(classes.select, isDisabled && classes.disabled)}
           onClick={(e) => {
@@ -247,8 +251,7 @@ export const Select = <S extends SelectValues = SelectValues>({
             }
             onClick?.();
             setOpen(true);
-          }}
-        >
+          }}>
           <div>{onRenderSelectedItem()}</div>
           {/* show when hovered */}
           {allowClear && (
@@ -262,63 +265,66 @@ export const Select = <S extends SelectValues = SelectValues>({
             </div>
           )}
         </div>
-        <AnimatePresence
-          key="dropdown"
-          onExitComplete={() => setSearchTerm("")}
-        >
-          {open && (
-            <motion.div
-              variants={variants}
-              initial="initial"
-              animate={controls}
-              exit="exit"
-              custom={{ maxHeight, shouldReverse }}
-              style={dropdownStyle}
-            >
-              {beforeExtraNode}
-              {showSearch && (
-                <div className={classes.search}>
-                  <input
-                    className={classes.input}
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => {
-                      setSearchTerm(e.target.value);
-                      onSearch?.(e.target.value);
-                    }}
-                  />
-                </div>
-              )}
-              {!isNoContent() ? (
-                filterOptions?.map((item, index) => (
-                  <div
-                    key={index}
-                    className={classNames(
-                      classes.item,
-                      isSelected(item) && classes.selected
-                    )}
-                    onClick={() => onSelect(item)}
-                  >
-                    {onRenderItem(item)}
-                    {check(item)}
+        <Portal>
+          <AnimatePresence
+            key='dropdown'
+            onExitComplete={() => setSearchTerm("")}>
+            {open && (
+              <motion.div
+                variants={variants}
+                initial='initial'
+                animate={controls}
+                exit='exit'
+                custom={{ maxHeight, shouldReverse, block }}
+                style={dropdownStyle}>
+                {beforeExtraNode}
+                {showSearch && (
+                  <div className={classes.search}>
+                    <input
+                      className={classes.input}
+                      type='text'
+                      value={searchTerm}
+                      onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                        onSearch?.(e.target.value);
+                      }}
+                    />
                   </div>
-                ))
-              ) : (
-                <div className={classes.noContent}>
-                  {error ? (
-                    <div>{error.message}</div>
-                  ) : noContent ? (
-                    noContent
-                  ) : (
-                    "No data found"
-                  )}
-                </div>
-              )}
-              {afterExtraNode}
-            </motion.div>
-          )}
-        </AnimatePresence>
+                )}
+                {!isNoContent() ? (
+                  filterOptions?.map((item, index) => (
+                    <div
+                      key={index}
+                      className={classNames(
+                        classes.item,
+                        isSelected(item) && classes.selected
+                      )}
+                      onClick={() => onSelect(item)}>
+                      {onRenderItem(item)}
+                      {check(item)}
+                    </div>
+                  ))
+                ) : (
+                  <div className={classes.noContent}>
+                    {error ? (
+                      <div>{error.message}</div>
+                    ) : noContent ? (
+                      noContent
+                    ) : (
+                      "No data found"
+                    )}
+                  </div>
+                )}
+                {afterExtraNode}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </Portal>
       </div>
     </div>
   );
+};
+
+const Portal = ({ children }: { children: ReactNode }) => {
+  return createPortal(children, document.body);
 };

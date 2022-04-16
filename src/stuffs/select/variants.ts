@@ -3,11 +3,13 @@ import { Variants } from "framer-motion";
 type Custom = {
   maxHeight?: number;
   shouldReverse?: boolean;
+  block: { left: number; bottom: number };
 };
 
 export const variants: Variants = {
-  initial: ({ maxHeight, shouldReverse }: Custom) => ({
+  initial: ({ maxHeight, shouldReverse, block }: Custom) => ({
     width: "100%",
+    maxWidth: 500,
     height: "auto",
     maxHeight: maxHeight ? maxHeight : undefined,
     scaleY: 0.9,
@@ -16,9 +18,9 @@ export const variants: Variants = {
     MozTransformOrigin: shouldReverse ? "bottom center" : "top center",
     borderRadius: 4,
     position: "absolute",
-    left: 0,
-    top: !shouldReverse ? "calc(100% + 8px)" : undefined,
-    bottom: shouldReverse ? "calc(100% + 8px)" : undefined,
+    left: block?.left || 0,
+    top: !shouldReverse ? (block?.bottom || 0) + 8 : undefined,
+    bottom: shouldReverse ? (block?.bottom || 0) + 8 : undefined,
     background: "#fff",
     opacity: 0,
     boxShadow: "0 4px 8px rgba(110,110,110,.18)",
