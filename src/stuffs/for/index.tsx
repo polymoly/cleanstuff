@@ -2,21 +2,23 @@ import { Fragment, Key, ReactNode } from "react";
 
 interface ForProps<S> {
   list: S[];
-  primary?: keyof S;
+  identifier?: keyof S;
   children: ReactNode | ((data: S, index: number) => ReactNode);
 }
 
-export function For<S extends any = {}>({
+export function For<S extends object = {}>({
   list,
   children,
-  primary,
+  identifier,
 }: ForProps<S>) {
+  const reactKey = (data: S, index: number) => {
+    return (identifier && data[identifier] ? data[identifier] : index) as Key;
+  };
+
   return (
     <Fragment>
       {list.map((data, index) => (
-        <Fragment
-          key={(primary && data[primary] ? data[primary] : index) as Key}
-        >
+        <Fragment key={reactKey(data, index)}>
           {typeof children === "function" ? children(data, index) : children}
         </Fragment>
       ))}
